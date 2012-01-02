@@ -80,6 +80,7 @@ class Shanty_Mongo_DocumentSet extends Shanty_Mongo_Document
 		$config['connectionGroup'] = $this->getConfigAttribute('connectionGroup');
 		$config['db'] = $this->getConfigAttribute('db');
 		$config['collection'] = $collection;
+                $config['parent'] = $this; // keep track of hierarchy
 		
 		if (!$reference) {
 			// If this is a new array element. We will $push to the array when saving
@@ -169,6 +170,7 @@ class Shanty_Mongo_DocumentSet extends Shanty_Mongo_Document
 			$document->setConfigAttribute('db', $this->getConfigAttribute('db'));
 			$document->setConfigAttribute('collection', $this->getConfigAttribute('collection'));
 			$document->setConfigAttribute('criteria', $this->getCriteria());
+                        $document->setConfigAttribute('parent', $this); // keep track of hierarchy
 			$document->applyRequirements($this->getRequirements(self::DYNAMIC_INDEX.'.'));
 		}
 		

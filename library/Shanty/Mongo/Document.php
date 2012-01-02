@@ -29,7 +29,8 @@ class Shanty_Mongo_Document extends Shanty_Mongo_Collection implements ArrayAcce
 		'criteria' => array(),
 		'parentIsDocumentSet' => false,
 		'requirementModifiers' => array(),
-		'locked' => false
+		'locked' => false,
+                'parent' => null
 	);
 	protected $_operations = array();
 	protected $_references = null;
@@ -615,6 +616,7 @@ class Shanty_Mongo_Document extends Shanty_Mongo_Collection implements ArrayAcce
 		$config['collection'] = $collection;
 		$config['requirementModifiers'] = $this->getRequirements($property.'.');
 		$config['hasId'] = $this->hasRequirement($property, 'hasId');
+                $config['parent'] = $this; // keep track of hierarchy
 		
 		if (!$reference) {
 			$config['pathToDocument'] = $this->getPathToProperty($property);
@@ -673,6 +675,7 @@ class Shanty_Mongo_Document extends Shanty_Mongo_Collection implements ArrayAcce
 			$value->setConfigAttribute('db', $this->getConfigAttribute('db'));
 			$value->setConfigAttribute('collection', $this->getConfigAttribute('collection'));
 			$value->setConfigAttribute('criteria', $this->getCriteria());
+                        $value->setConfigAttribute('parent', $parent); // keep track of hierarchy
 			$value->applyRequirements($this->getRequirements($property.'.'));
 		}
 		
